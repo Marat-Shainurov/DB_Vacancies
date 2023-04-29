@@ -11,6 +11,7 @@ class DBManager:
     def create_tables(self):
         """
         Создает таблицы <employers>, <vacancies>.
+        Заполняет таблицу <employers> с названиями выбранных компаний и их company_id.
         """
         connect_db_vacancies = psycopg2.connect(
             host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
@@ -20,22 +21,28 @@ class DBManager:
                 with connect_db_vacancies.cursor() as cur:
                     cur.execute(
                         "CREATE TABLE employers"
-                        "(company_name varchar(100), company_id int PRIMARY KEY, company_link varchar(255));"
+                        "(company_name varchar(100), company_id int PRIMARY KEY);"
+
+                        "INSERT INTO employers "
+                        "(company_name, company_id) VALUES"
+                        "('HeadHunter', '1455'), ('ЛАНИТ', '733'), ('Совкомбанк технологии', '5390761'),"
+                        "('Runexis', '4130174'), ('Right Line', '3649870'), ('HR Prime', '4759060'),"
+                        "('DNS Технологии', '9311920'), ('Яндекс', '1740'), ('Авито', '84585'),"
+                        "('Тинькофф', '78638'), ('Сбер', '3529'), ('Билайн', '4934');"
 
                         "CREATE TABLE vacancies"
                         "(vacancy_id int PRIMARY KEY, vacancy_name varchar, salary_from int, salary_to int, "
                         "salary_currency varchar(50),"
-                        "salary_gross int,"
-                        "company_id int, company_name varchar, experience varchar(50), "
-                        "requirement text, responsibility text, "
-                        "CONSTRAINT fk_vacancies_employers FOREIGN KEY(company_id) REFERENCES employers(company_id))"
+                        "company_id int, company_name varchar, company_link varchar, experience varchar(50), "
+                        "requirement text, responsibility text,"
+                        "CONSTRAINT fk_vacancies_employers FOREIGN KEY(company_id) REFERENCES employers(company_id));"
                     )
         finally:
             connect_db_vacancies.close()
 
-    def add_data_to_db(self):
+    def add_data_to_db_vacancies(self):
         """
-        Заполняет данными таблицы, на основе ответа API HH.ru.
+        Заполняет данными таблицу vacancies, на основе ответа API HH.ru.
         """
         connect_db_vacancies = psycopg2.connect(
             host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
@@ -45,9 +52,18 @@ class DBManager:
                 with connect_db_vacancies.cursor() as cur:
                     response = get_vacancies()
                     for element in response:
-                        pass
-        except:
-            pass
+                        cur.execute(
+                            "INSERT INTO vacancies (vacancy_id, vacancy_name, salary_from, salary_to, salary_currency, "
+                            "company_name, company_id, company_link, experience, requirement, "
+                            "responsibility) "
+                            "Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (element['id'], element['name'], element['salary']['from'], element['salary']['to'],
+                             element['salary']['currency'], element['employer']['name'], element['employer']['id'],
+                             element['employer']['alternate_url'], element['experience']['id'],
+                             element['snippet']['requirement'], element['snippet']['responsibility'])
+                        )
+        finally:
+            connect_db_vacancies.close()
 
     def get_companies_and_vacancies_count(self):
         """

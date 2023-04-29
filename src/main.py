@@ -8,3 +8,6 @@ from src.dbmanager import DBManager
 
 obj = DBManager('DB_Vacancies')
 obj.create_tables()
+obj.add_data_to_db_vacancies()
+
+
