@@ -2,9 +2,6 @@ import requests
 import psycopg2
 import os
 
-# func1 from utils requests data
-# method adds data to the DB
-# class operates with the data via connect()
 
 class DBManager:
 
