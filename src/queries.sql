@@ -41,3 +41,7 @@ ORDER BY vacancy_numbers DESC;
 SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link
 FROM vacancies;
 
+-- Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
+-- (для метода get_vacancies_with_keyword)
+SELECT * FROM vacancies
+WHERE LOWER(vacancy_name) LIKE LOWER('%python%')

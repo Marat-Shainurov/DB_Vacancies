@@ -114,7 +114,17 @@ class DBManager:
         """
         Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
         """
-
+        connect_db_vacancies = psycopg2.connect(
+            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+        try:
+            with connect_db_vacancies:
+                with connect_db_vacancies.cursor() as cur:
+                    cur.execute(
+                        f"SELECT * FROM vacancies "
+                        f"WHERE LOWER(vacancy_name) LIKE LOWER('%{keyword}%')"
+                    )
+        finally:
+            connect_db_vacancies.close()
 
     def get_avg_salary(self):
         """
