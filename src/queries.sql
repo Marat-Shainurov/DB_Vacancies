@@ -19,6 +19,7 @@ CREATE TABLE vacancies
 	salary_from int,
 	salary_to int,
 	salary_currency varchar(50),
+	vacancy_link varchar,
 	company_id int,
 	company_name varchar,
 	company_link varchar,

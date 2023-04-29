@@ -32,7 +32,7 @@ class DBManager:
 
                         "CREATE TABLE vacancies"
                         "(vacancy_id int PRIMARY KEY, vacancy_name varchar, salary_from int, salary_to int, "
-                        "salary_currency varchar(50),"
+                        "salary_currency varchar(50), vacancy_link varchar,"
                         "company_id int, company_name varchar, company_link varchar, experience varchar(50), "
                         "requirement text, responsibility text,"
                         "CONSTRAINT fk_vacancies_employers FOREIGN KEY(company_id) REFERENCES employers(company_id));"
@@ -54,11 +54,12 @@ class DBManager:
                     for element in response:
                         cur.execute(
                             "INSERT INTO vacancies (vacancy_id, vacancy_name, salary_from, salary_to, salary_currency, "
-                            "company_name, company_id, company_link, experience, requirement, "
+                            "vacancy_link, company_name, company_id, company_link, experience, requirement, "
                             "responsibility) "
-                            "Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            "Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                             (element['id'], element['name'], element['salary']['from'], element['salary']['to'],
-                             element['salary']['currency'], element['employer']['name'], element['employer']['id'],
+                             element['salary']['currency'], element['alternate_url'],
+                             element['employer']['name'], element['employer']['id'],
                              element['employer']['alternate_url'], element['experience']['id'],
                              element['snippet']['requirement'], element['snippet']['responsibility'])
                         )
