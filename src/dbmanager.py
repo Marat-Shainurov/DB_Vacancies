@@ -70,16 +70,51 @@ class DBManager:
         """
         Получает список всех компаний и количество вакансий у каждой компании.
         """
+        connect_db_vacancies = psycopg2.connect(
+            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+
+        try:
+            with connect_db_vacancies:
+                with connect_db_vacancies.cursor() as cur:
+                    cur.execute(
+                        "SELECT company_name, COUNT(*) as vacancy_numbers "
+                        "FROM vacancies "
+                        "GROUP BY company_name "
+                        "ORDER BY vacancy_numbers DESC"
+                    )
+                    rows = cur.fetchall()
+                    for row in rows:
+                        print(f'{row[0]} --- {row[1]} вакансий.')
+                        print('-' * 30)
+        finally:
+            connect_db_vacancies.close()
 
     def get_all_vacancies(self):
         """
         Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
         """
+        connect_db_vacancies = psycopg2.connect(
+            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+
+        try:
+            with connect_db_vacancies:
+                with connect_db_vacancies.cursor() as cur:
+                    cur.execute(
+                        "SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link "
+                        "FROM vacancies")
+                    rows = cur.fetchall()
+                    for row in rows:
+                        # print(f'{row[0]} - {row[1]} вакансий.')
+                        print(f'{row[0]} --- {row[1]} --- От {row[2]} до {row[3]} {row[4]} --- Ссылка {row[5]}')
+                        print('-' * 130)
+        finally:
+            connect_db_vacancies.close()
 
     def get_vacancies_with_keyword(self, keyword):
         """
         Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
         """
+
 
     def get_avg_salary(self):
         """

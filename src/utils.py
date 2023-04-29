@@ -45,5 +45,3 @@ def add_data_to_file(data):
     """
     with open('vacancies.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
-
-add_data_to_file(get_vacancies())

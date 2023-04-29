@@ -29,3 +29,15 @@ CREATE TABLE vacancies
 
 	CONSTRAINT fk_vacancies_employers FOREIGN KEY(company_id) REFERENCES employers(company_id)
 );
+
+-- Получает список всех компаний и количество вакансий у каждой компании (для метода get_companies_and_vacancies_count)
+SELECT company_name, COUNT(*) as vacancy_numbers
+FROM vacancies
+GROUP BY company_name
+ORDER BY vacancy_numbers DESC;
+
+-- Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
+--- (для метода get_all_vacancies)
+SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link
+FROM vacancies;
+
