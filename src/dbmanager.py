@@ -5,9 +5,10 @@ from src.utils import get_vacancies
 
 class DBManager:
 
-    def __init__(self, db_name):
+    def __init__(self, db_name, password):
         self.db_name = db_name
         self.rur_cur = 80
+        self.password = password
 
     def create_tables(self):
         """
@@ -15,7 +16,7 @@ class DBManager:
         Заполняет таблицу <employers> с названиями выбранных компаний и их company_id.
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
 
         try:
             with connect_db_vacancies:
@@ -46,7 +47,7 @@ class DBManager:
         Заполняет данными таблицу vacancies, на основе ответа API HH.ru.
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
 
         try:
             with connect_db_vacancies:
@@ -72,7 +73,7 @@ class DBManager:
         Получает список всех компаний и количество вакансий у каждой компании.
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
 
         try:
             with connect_db_vacancies:
@@ -95,7 +96,7 @@ class DBManager:
         Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
 
         try:
             with connect_db_vacancies:
@@ -115,7 +116,7 @@ class DBManager:
         Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
         try:
             with connect_db_vacancies:
                 with connect_db_vacancies.cursor() as cur:
@@ -136,7 +137,7 @@ class DBManager:
         Получает среднюю зарплату по вакансиям.
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
 
         try:
             with connect_db_vacancies:
@@ -157,7 +158,7 @@ class DBManager:
         Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
         """
         connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+            host='localhost', database=self.db_name, user='postgres', password=self.password)
 
         try:
             with connect_db_vacancies:
