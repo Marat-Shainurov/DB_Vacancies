@@ -1,3 +1,5 @@
+-- Создание базы данных.
+CREATE DATABASE 'Your_DB_name'"
 
 -- Создание таблиц employers и vacancies.
 CREATE TABLE employers

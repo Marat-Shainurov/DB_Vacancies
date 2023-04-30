@@ -10,6 +10,19 @@ class DBManager:
         self.rur_cur = 80
         self.password = password
 
+    def create_db(self):
+        """
+        Создает базу данных.
+        """
+        conn = psycopg2.connect(
+            host='localhost', user='postgres', password=self.password)
+        conn.autocommit = True
+
+        with conn.cursor() as cur:
+            cur.execute(f"CREATE DATABASE {self.db_name}")
+
+        conn.close()
+
     def create_tables(self):
         """
         Создает таблицы <employers>, <vacancies>.
