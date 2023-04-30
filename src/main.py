@@ -1,8 +1,9 @@
 from src.dbmanager import DBManager
 
-# Создание экземпляра класса DBManager, создание таблиц.
-# Необходимо указать название созданной базы данных и свой пароль (аргументы для инициализации db_object).
-db_object = DBManager('DB_Vacancies', 'Benzokolon1')
+# Создание экземпляра класса DBManager, создание базы данных и таблиц.
+# Необходимо указать необходимое название базы данных и свой пароль (аргументы для инициализации db_object).
+db_object = DBManager('Your_DB_name', 'Your_password')
+db_object.create_db()
 db_object.create_tables()
 
 # Заполнение таблиц на основе запроса к API HH.ru.
