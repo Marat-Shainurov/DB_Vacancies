@@ -1,13 +1,26 @@
 from src.dbmanager import DBManager
 
-# get_request_hh() and get_vacancies() from utils request data from HH api
-# a DBManager class object is created
-# add_data_to_db() method adds data to the DB
-# class methods operate with the data
+# Создание экземпляра класса DBManager, создание таблиц.
+db_object = DBManager('DB_Vacancies')
+# db_object.create_tables()
+
+# Заполнение таблиц на основе запроса к API HH.ru.
+# db_object.add_data_to_db_vacancies()
+
+# Получение списка всех компаний и количество вакансий у каждой компании
+# db_object.get_companies_and_vacancies_count()
+
+# Получение списка всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию
+# db_object.get_all_vacancies()
+
+# Получение списка всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
+# db_object.get_vacancies_with_keyword('python')
+
+# Получение средней зарплаты по вакансиям.
+# print(db_object.get_avg_salary())
+
+# Получение списка всех вакансий, у которых зарплата выше средней по всем вакансиям.
+# db_object.get_vacancies_with_higher_salary()
 
 
-obj = DBManager('DB_Vacancies')
-# obj.create_tables()
-# obj.add_data_to_db_vacancies()
-obj.get_companies_and_vacancies_count()
-# obj.get_all_vacancies()
+# fill the readme file
