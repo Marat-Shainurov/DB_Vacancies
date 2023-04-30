@@ -30,7 +30,8 @@ CREATE TABLE vacancies
 	CONSTRAINT fk_vacancies_employers FOREIGN KEY(company_id) REFERENCES employers(company_id)
 );
 
--- Получает список всех компаний и количество вакансий у каждой компании (для метода get_companies_and_vacancies_count)
+-- Получает список всех компаний и количество вакансий у каждой компании
+-- (для метода get_companies_and_vacancies_count)
 SELECT company_name, COUNT(*) as vacancy_numbers
 FROM vacancies
 GROUP BY company_name
@@ -43,5 +44,25 @@ FROM vacancies;
 
 -- Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
 -- (для метода get_vacancies_with_keyword)
-SELECT * FROM vacancies
+SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link
+FROM vacancies
 WHERE LOWER(vacancy_name) LIKE LOWER('%python%')
+
+-- Получает среднюю зарплату по вакансиям.
+-- (для метода get_avg_salary)
+SELECT SUM(CASE
+WHEN salary_from IS NULL THEN (salary_to * 0.7)
+WHEN salary_currency != 'RUR' THEN salary_from * 80 ELSE salary_from END) / COUNT(*) as average_salary
+FROM vacancies
+
+
+-- Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
+-- (для метода get_vacancies_with_higher_salary)
+-- Для примера использована произвольная цифра 100000, как средняя. Метод использует метод get_avg_salary для расчета.
+SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link,
+CASE
+WHEN salary_from IS NULL THEN (salary_to * 0.7)
+WHEN salary_currency != 'RUR' THEN salary_from * 80 ELSE salary_from END as salary_to_compare
+FROM vacancies
+WHERE (CASE WHEN salary_from IS NULL THEN (salary_to * 0.7)
+WHEN salary_currency != 'RUR' THEN salary_from * 80 ELSE salary_from END) >= 100000

@@ -7,6 +7,7 @@ class DBManager:
 
     def __init__(self, db_name):
         self.db_name = db_name
+        self.rur_cur = 80
 
     def create_tables(self):
         """
@@ -104,7 +105,6 @@ class DBManager:
                         "FROM vacancies")
                     rows = cur.fetchall()
                     for row in rows:
-                        # print(f'{row[0]} - {row[1]} вакансий.')
                         print(f'{row[0]} --- {row[1]} --- От {row[2]} до {row[3]} {row[4]} --- Ссылка {row[5]}')
                         print('-' * 130)
         finally:
@@ -120,9 +120,14 @@ class DBManager:
             with connect_db_vacancies:
                 with connect_db_vacancies.cursor() as cur:
                     cur.execute(
-                        f"SELECT * FROM vacancies "
+                        f"SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link "
+                        f"FROM vacancies "
                         f"WHERE LOWER(vacancy_name) LIKE LOWER('%{keyword}%')"
                     )
+                    rows = cur.fetchall()
+                    for row in rows:
+                        print(f'{row[0]} --- {row[1]} --- От {row[2]} до {row[3]} {row[4]} --- Ссылка {row[5]}')
+                        print('-'*130)
         finally:
             connect_db_vacancies.close()
 
@@ -130,8 +135,45 @@ class DBManager:
         """
         Получает среднюю зарплату по вакансиям.
         """
+        connect_db_vacancies = psycopg2.connect(
+            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+
+        try:
+            with connect_db_vacancies:
+                with connect_db_vacancies.cursor() as cur:
+                    cur.execute(
+                        "SELECT SUM(CASE "
+                        "WHEN salary_from IS NULL THEN (salary_to * 0.7) "
+                        f"WHEN salary_currency != 'RUR' THEN salary_from * {self.rur_cur} ELSE salary_from END) / "
+                        "COUNT(*) as average_salary FROM vacancies"
+                    )
+                    data = cur.fetchall()
+                    return round(data[0][0])
+        finally:
+            connect_db_vacancies.close()
 
     def get_vacancies_with_higher_salary(self):
         """
         Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
         """
+        connect_db_vacancies = psycopg2.connect(
+            host='localhost', database=self.db_name, user='postgres', password='Benzokolon1')
+
+        try:
+            with connect_db_vacancies:
+                with connect_db_vacancies.cursor() as cur:
+                    cur.execute(
+                        "SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link,"
+                        "CASE WHEN salary_from IS NULL THEN (salary_to * 0.7) "
+                        "WHEN salary_currency != 'RUR' THEN salary_from * 80 ELSE salary_from END as salary_to_compare "
+                        "FROM vacancies "
+                        "WHERE (CASE WHEN salary_from IS NULL THEN (salary_to * 0.7) "
+                        "WHEN salary_currency != 'RUR' THEN salary_from * 80 ELSE salary_from END) "
+                        f">= {self.get_avg_salary()}"
+                    )
+                    rows = cur.fetchall()
+                    for row in rows:
+                        print(f'{row[0]} --- {row[1]} --- От {row[2]} до {row[3]} {row[4]} --- Ссылка {row[5]}')
+                        print('-' * 130)
+        finally:
+            connect_db_vacancies.close()

@@ -1,4 +1,3 @@
-import pytest
 from src.utils import get_request_hh, get_vacancies
 
 
