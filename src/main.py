@@ -17,7 +17,7 @@ db_object.add_data_to_db_vacancies()
 # db_object.get_vacancies_with_keyword('python')
 
 # Получение средней зарплаты по вакансиям.
-# print(db_object.get_avg_salary())
+# print('Средняя ЗП -', db_object.get_avg_salary(), 'RUR')
 
 # Получение списка всех вакансий, у которых зарплата выше средней по всем вакансиям.
 # db_object.get_vacancies_with_higher_salary()
