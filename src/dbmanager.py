@@ -5,17 +5,16 @@ from src.utils import get_vacancies
 
 class DBManager:
 
-    def __init__(self, db_name, password):
+    def __init__(self, db_name, params):
         self.db_name = db_name
         self.rur_cur = 80
-        self.password = password
+        self.params = params
 
     def create_db(self):
         """
         Создает базу данных.
         """
-        conn = psycopg2.connect(
-            host='localhost', user='postgres', password=self.password)
+        conn = psycopg2.connect(dbname='postgres', **self.params)
         conn.autocommit = True
 
         with conn.cursor() as cur:
@@ -28,8 +27,7 @@ class DBManager:
         Создает таблицы <employers>, <vacancies>.
         Заполняет таблицу <employers> с названиями выбранных компаний и их company_id.
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
 
         try:
             with connect_db_vacancies:
@@ -59,8 +57,7 @@ class DBManager:
         """
         Заполняет данными таблицу vacancies, на основе ответа API HH.ru.
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
 
         try:
             with connect_db_vacancies:
@@ -85,8 +82,7 @@ class DBManager:
         """
         Получает список всех компаний и количество вакансий у каждой компании.
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
 
         try:
             with connect_db_vacancies:
@@ -108,8 +104,7 @@ class DBManager:
         """
         Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
 
         try:
             with connect_db_vacancies:
@@ -128,8 +123,7 @@ class DBManager:
         """
         Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
         try:
             with connect_db_vacancies:
                 with connect_db_vacancies.cursor() as cur:
@@ -141,7 +135,7 @@ class DBManager:
                     rows = cur.fetchall()
                     for row in rows:
                         print(f'{row[0]} --- {row[1]} --- От {row[2]} до {row[3]} {row[4]} --- Ссылка {row[5]}')
-                        print('-'*130)
+                        print('-' * 130)
         finally:
             connect_db_vacancies.close()
 
@@ -149,8 +143,7 @@ class DBManager:
         """
         Получает среднюю зарплату по вакансиям.
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
 
         try:
             with connect_db_vacancies:
@@ -170,8 +163,7 @@ class DBManager:
         """
         Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
         """
-        connect_db_vacancies = psycopg2.connect(
-            host='localhost', database=self.db_name, user='postgres', password=self.password)
+        connect_db_vacancies = psycopg2.connect(database=self.db_name, **self.params)
 
         try:
             with connect_db_vacancies:
