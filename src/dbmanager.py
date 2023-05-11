@@ -111,7 +111,7 @@ class DBManager:
             with connect_db_vacancies:
                 with connect_db_vacancies.cursor() as cur:
                     cur.execute(
-                        "SELECT company_name, vacancy_name, salary_to, salary_from, salary_currency, vacancy_link "
+                        "SELECT company_name, vacancy_name, salary_from, salary_to, salary_currency, vacancy_link "
                         "FROM vacancies")
                     rows = cur.fetchall()
                     for row in rows:
